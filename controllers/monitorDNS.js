@@ -3,6 +3,7 @@
 const { updateDNSRecords } = require('../components/cloudflare/updateDNSRecords');
 const { getDNSRecords } = require('../components/cloudflare/getDNSRecords');
 const { getPublicIP } = require('../components/ipify/getPublicIP');
+const { sendEmail } = require('../components/sendgrid/sendEmail');
 const logger = require('../components/pino/pino');
 
 // Assets
@@ -40,11 +41,32 @@ async function monitorDNS() {
         // Update DNS Record
         for (let index = 0; index < incorrectDNS.length; index++) {
             incorrectDNS[index].record.content = publicIP.ip;
-            logger.info(`Started to update incorrectDNS[${index}]`, incorrectDNS[index]);
+            logger.info({
+                process_name: 'updateDNSRecords',
+                step: 'Call Not Started',
+                status: 'Pending'
+            }, incorrectDNS[index]);
             const updatedRecord = await updateDNSRecords(incorrectDNS[index].website, incorrectDNS[index].record)
             incorrectDNS[index].record.status = status[2];
-            logger.info(`Finished update on incorrectDNS[${index}]`, incorrectDNS[index], updatedRecord);
         }
+
+        // Send Email of summary
+        sendEmail(
+            'ADMIN', 
+            [{
+                email: process.env.NOTIFICATION_EMAIL,
+                name: `Finn O'Neill`
+            }],
+            `WebMonitor - DNS Records Updated`,
+            `Hi Admin,
+            Your IP address was changed and we updated the following DNS Records:
+
+            ${JSON.stringify(incorrectDNS)}
+
+            Kind regards, 
+            Admin.
+            `
+        );
     }
 
     return {

@@ -34,8 +34,9 @@ async function updateDNSRecords(website, record) {
                 logger.error({
                     process_name: 'updateDNSRecords',
                     step: 'Returned response',
-                    status: 'Failed'
-                }, error);
+                    status: 'Failed',
+                    error: error
+                });
                 // TODO :: Send Email Notification of API Failure
                 reject(error);
             });

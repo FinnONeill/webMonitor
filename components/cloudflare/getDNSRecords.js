@@ -28,13 +28,14 @@ async function getDNSRecords(website) {
                 }, body);
                 resolve(body);
             })
-            .catch(error => {
+            .catch(async error => {
                 logger.error({
                     process_name: 'getDNSRecords',
                     step: 'Returned response',
-                    status: 'Failed'
-                }, error);
-                // TODO :: Send Email Notification of API Failure
+                    status: 'Failed',
+                    error: error
+                });
+                
                 reject(error);
             });
         } else {

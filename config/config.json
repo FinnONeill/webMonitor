@@ -4,5 +4,11 @@
             "url": "finnoneill.ie",
             "zone": "e47f75dbfa39df82233cb4628be9191e"
         }
-    ]
+    ],
+    "email": {
+        "admin": {
+            "address": "admin@finnoneill.ie",
+            "name": "Admin"
+        }
+    }
 }
