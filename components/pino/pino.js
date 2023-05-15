@@ -7,7 +7,7 @@ const transports = pino.transport({
             level: 'trace',
             target: 'pino/file',
             options: {
-                destination: path.join(process.cwd(), process.env.LOG_DIRNAME, `${new Date().toISOString().split('T')[0].replaceAll('-', '_')}.log`),
+                destination: path.join(process.cwd(), process.env.LOG_DIRNAME, `${new Date().toISOString().split('T')[0].replace(/-./g, '_')}.log`),
                 mkdir: true
             },
         },
